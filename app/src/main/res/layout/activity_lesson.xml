@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/outermost_layout_lesson"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BA68C8"
+    tools:context=".Activities.LessonActivity">
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerTextView
+        android:id="@+id/question_lesson"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#fff"
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/top_vertical_lesson"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressbar_lesson"
+        tools:text=" Câu hỏi ?" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/progressbar_lesson"
+        android:layout_width="0dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rcBackgroundColor="#fff"
+        app:rcBackgroundPadding="2dp"
+        app:rcMax="100"
+        app:rcProgress="0"
+        app:rcProgressColor="#76FF03"
+        app:rcRadius="5dp"
+        app:rcReverse="false" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerTextView
+        android:id="@+id/top_right_answer_lesson"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/answer_background"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#BA68C8"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/mid_vertial_lesson"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/horizontal_guideline_lesson"
+        app:layout_constraintTop_toBottomOf="@+id/top_vertical_lesson"
+        tools:text="Đáp án B" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerTextView
+        android:id="@+id/top_left_answer_lesson"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/answer_background"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#BA68C8"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/mid_vertial_lesson"
+        app:layout_constraintEnd_toStartOf="@+id/horizontal_guideline_lesson"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_vertical_lesson"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Đáp án A" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerTextView
+        android:id="@+id/bottom_left_answer_lesson"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/answer_background"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#BA68C8"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/bot_vertical_lesson"
+        app:layout_constraintEnd_toStartOf="@+id/horizontal_guideline_lesson"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mid_vertial_lesson"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Đáp án C" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerTextView
+        android:id="@+id/bottom_right_answer_lesson"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/answer_background"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#BA68C8"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/bot_vertical_lesson"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/horizontal_guideline_lesson"
+        app:layout_constraintTop_toTopOf="@+id/mid_vertial_lesson"
+        app:layout_constraintVertical_bias="1.0"
+        tools:text="Đáp án D" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/horizontal_guideline_lesson"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/mid_vertial_lesson"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.58" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/top_vertical_lesson"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.30" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/bot_vertical_lesson"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.86" />
+
+    <Button
+        android:id="@+id/check_answer_button_lesson"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/check_answer"
+        android:fontFamily="monospace"
+        android:padding="10dp"
+        android:text="Kiểm tra"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
