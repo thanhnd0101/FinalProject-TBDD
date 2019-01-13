@@ -66,12 +66,12 @@ public class LoginActivity extends Activity {
                 .setNeedBackgroundShadow(true)
                 .init(this);
 
-        /*if (checkFacebookLoginStatus()){
+        if (checkFacebookLoginStatus()){
             toDashboardActivity();
         }
         //Initialize layout and set up events
         initFacebookLoginLayout();
-        initFacebookLoginEvents();*/
+        initFacebookLoginEvents();
     }
 
     @Override
