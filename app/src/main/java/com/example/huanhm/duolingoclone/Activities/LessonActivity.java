@@ -8,11 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerTextView;
 import com.example.huanhm.duolingoclone.DataModel.Lesson;
@@ -29,11 +31,17 @@ import com.github.bluzwong.swipeback.SwipeBackActivityHelper;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.lang.reflect.Array;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +49,13 @@ import retrofit2.Response;
 
 public class LessonActivity extends AppCompatActivity {
 
+    public static int OvertimeCount = 0;
+    public static int KillStreakCount =0;
+    private final int OVERTIME_LIMIT= 5;
+    private final int KILL_STREAK_LIMIT = 3;
+
+    private final int QUESTION_AMOUNT = 5;
+    private final String SECRETE_KEY ="polyglotto_secretkey";
     SwipeBackActivityHelper helper = new SwipeBackActivityHelper();
 
     RoundCornerProgressBar progressBar;
@@ -69,6 +84,7 @@ public class LessonActivity extends AppCompatActivity {
         getWindow().setExitTransition(new Slide(Gravity.START));
 
         setContentView(R.layout.activity_lesson);
+
 
         helper.setEdgeMode(true)
                 .setParallaxMode(true)
@@ -213,13 +229,13 @@ public class LessonActivity extends AppCompatActivity {
                     dialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
                     dialog.setTitleText("Hoàn thành");
                     dialog.setConfirmText("OK");
-                    //int exp = (int) (score * rightAnswerCount * 1.0f / questions.size());
-                    //dialog.setContentText("Kinh nghiệm nhận được: " + String.valueOf(exp));
-                    //dialog.getProgressHelper().setProgress(rightAnswerCount * 100.0f / questions.size());
                     dialog.setContentText("Số câu trả lời đúng" + String.valueOf(rightAnswerCount));
                     dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            if(LoginActivity.userInfo!= null) {
+                                checkUserAchievement();
+                            }
                             helper.finish();
                             dialog.cancel();
                         }
@@ -228,6 +244,52 @@ public class LessonActivity extends AppCompatActivity {
                 dialog.show();
             }
         }
+    }
+
+    private void checkUserAchievement() {
+        if(LoginActivity.userInfo != null) {
+            ++LessonActivity.OvertimeCount;
+            if(LessonActivity.OvertimeCount == OVERTIME_LIMIT &&
+                    !LoginActivity.userInfo.getAchievements().contains(4)){
+                getAchievement(4);
+            }
+            else if (rightAnswerCount == QUESTION_AMOUNT && difficulty.equals("hard") &&
+                    !LoginActivity.userInfo.getAchievements().contains(1)) {
+                getAchievement(1);
+            }else if(rightAnswerCount == QUESTION_AMOUNT){
+                ++KillStreakCount;
+                if(KillStreakCount == KILL_STREAK_LIMIT){
+                    getAchievement(3);
+                }
+            }else if (rightAnswerCount == 0){
+                getAchievement(2);
+            }
+        }
+    }
+    private String status;
+    private void getAchievement(int achievementid) {
+        String encodedString = generateHashWithHmac256(
+                LoginActivity.profile.getId()+"|"+SECRETE_KEY+"|"+String.valueOf(achievementid),SECRETE_KEY);
+        Call<String> call = PolyglottoService.postUserAchievement(LoginActivity.accessToken.getToken(),
+                LoginActivity.profile.getId(),achievementid,encodedString);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                if(response.isSuccessful()){
+                    status = response.body();
+                    if(Objects.requireNonNull(status).equals("success")){
+                        Toast.makeText(getApplicationContext(), "Modify successfuly", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Modify failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Toast.makeText(getApplicationContext(), "Modify failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private View.OnTouchListener initAnswerTouchListener() {
@@ -256,7 +318,7 @@ public class LessonActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.show();
 
-        Call<QuestionResponse> call = OpenTriviaService.getQuestionsWithAmountOf(5,category,difficulty,"multiple");
+        Call<QuestionResponse> call = OpenTriviaService.getQuestionsWithAmountOf(QUESTION_AMOUNT,category,difficulty,"multiple");
         call.enqueue(new Callback<QuestionResponse>() {
             @Override
             public void onResponse(@NonNull Call<QuestionResponse> call, @NonNull Response<QuestionResponse> response) {
@@ -303,5 +365,34 @@ public class LessonActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         helper.finish();
+    }
+    private String generateHashWithHmac256(String message, String key) {
+        String messageDigest = "";
+        try {
+            final String hashingAlgorithm = "HmacSHA256";
+            byte[] bytes = hmac(hashingAlgorithm, key.getBytes(), message.getBytes());
+            messageDigest = bytesToHex(bytes);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return messageDigest;
+    }
+
+    public static byte[] hmac(String algorithm, byte[] key, byte[] message) throws NoSuchAlgorithmException, InvalidKeyException {
+        Mac mac = Mac.getInstance(algorithm);
+        mac.init(new SecretKeySpec(key, algorithm));
+        return mac.doFinal(message);
+    }
+
+    public static String bytesToHex(byte[] bytes) {
+        final char[] hexArray = "0123456789abcdef".toCharArray();
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0, v; j < bytes.length; j++) {
+            v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 }

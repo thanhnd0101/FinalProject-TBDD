@@ -1,39 +1,33 @@
 package com.example.huanhm.duolingoclone.PolyglottoService;
 
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.LoginRequest;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.RegisterRequest;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.LessonList;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.QuestionList;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.ResponseAndMessage;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.TopicList;
+
+import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.EditRequest;
+import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.Status;
+import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.UserInfo;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.HTTP;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+
 public interface PolyglottoAPI {
-    @POST("login")
-    Call<ResponseAndMessage> login(@Body LoginRequest request);
 
-    @GET("checkuser/{username}")
-    Call<ResponseAndMessage> checkuser(@Path("username") String username);
+    @GET("/user/{userid}/info")
+    Call<UserInfo> getUserInfo(@Header("access-token") String accessToken, @Path("userid") String userid);
 
-    @GET("checkemail/{email}")
-    Call<ResponseAndMessage> checkemail(@Path("email") String email);
+    @Headers({"access-token: POLYGLOTTO000"})
+    @GET("/user/000/info")
+    Call<UserInfo> getUserInfoDefault();
 
-    @POST("register")
-    Call<ResponseAndMessage> register(@Body RegisterRequest request);
+    @POST("/user/{userid}/edit/all")
+    Call<String> postModifyUserInfo(@Header("access-token") String accessToken,@Path("userid") String userid, @Body EditRequest editRequest);
 
-    @GET("chude/all")
-    Call<TopicList> getTopicList();
-
-    @GET("baihoc/all/{idbaihoc}")
-    Call<LessonList> getLessonList(@Path("idbaihoc") int id);
-
-    @GET("cauhoi")
-    Call<QuestionList> getQuestionList(@Query("baihoc") int id);
+    @POST("/user/{userid}/unlock/{achievementid}")
+    Call<String> postAchievement(@Header("access-token") String accessToken,@Path("userid") String userid,@Path("achievementid") int achievementid, @Body String hmac);
 }

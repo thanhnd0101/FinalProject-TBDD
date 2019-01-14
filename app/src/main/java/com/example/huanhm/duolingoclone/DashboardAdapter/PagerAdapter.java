@@ -50,7 +50,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
         return mFragmentList.get(position);
     }
 
-    public int[] imageResId = {R.drawable.ic_outline_home,R.drawable.ic_search_black_24dp,R.drawable.ic_account_box_black_24dp};
+    public int[] imageResId = {R.drawable.ic_outline_home,R.drawable.ic_golf_course_black_24dp,R.drawable.ic_search_black_24dp,R.drawable.ic_account_box_black_24dp};
 
     public View getTabView(Context context, int position) {
         // Given you have a custom layout in `res/layout/custom_tab.xml` with a TextView and ImageView

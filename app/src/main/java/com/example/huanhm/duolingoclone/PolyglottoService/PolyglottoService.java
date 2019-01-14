@@ -1,27 +1,35 @@
 package com.example.huanhm.duolingoclone.PolyglottoService;
 
+import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.EditRequest;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.LoginRequest;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.RegisterRequest;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.LessonList;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.QuestionList;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.ResponseAndMessage;
+import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.Status;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.TopicList;
+import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.UserInfo;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class PolyglottoService {
     private static Retrofit retrofit;
     private static PolyglottoAPI api;
     private static PolyglottoService service;
 
+
     protected PolyglottoService() {
+
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://thevncore-lab.mooo.com:12904/")
+                .baseUrl("https://polyglotto.herokuapp.com")
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         api = retrofit.create(PolyglottoAPI.class);
     }
 
@@ -32,31 +40,21 @@ public class PolyglottoService {
         return service;
     }
 
-    public static Call<ResponseAndMessage> login(LoginRequest request) {
-        return getInstance().api.login(request);
+    public static Call<UserInfo> getUserInfo(String accessToken,String userid){
+        getInstance();
+        return api.getUserInfo(accessToken,userid);
+    }
+    public static Call<UserInfo> getUserDefault(){
+        getInstance();
+        return api.getUserInfoDefault();
+    }
+    public static Call<String> postModifiedUserInfo(String access, String userid, EditRequest editRequest){
+        getInstance();
+        return api.postModifyUserInfo(access,userid,editRequest);
     }
 
-    public static Call<ResponseAndMessage> checkuser(String username) {
-        return getInstance().api.checkuser(username);
-    }
-
-    public static Call<ResponseAndMessage> checkemail(String email) {
-        return getInstance().api.checkemail(email);
-    }
-
-    public static Call<ResponseAndMessage> register(RegisterRequest request) {
-        return getInstance().api.register(request);
-    }
-
-    public static Call<TopicList> getTopicList() {
-        return getInstance().api.getTopicList();
-    }
-
-    public static Call<LessonList> getLessonList(int id) {
-        return getInstance().api.getLessonList(id);
-    }
-
-    public static Call<QuestionList> getQuestionList(int id) {
-        return getInstance().api.getQuestionList(id);
+    public static Call<String> postUserAchievement(String access,String userid,int achievementid,String hmac){
+        getInstance();
+        return api.postAchievement(access,userid,achievementid,hmac);
     }
 }

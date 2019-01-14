@@ -9,6 +9,5 @@
     <string name="fb_login_protocol_scheme">fb359814658132098</string>
     <string name="phone_hint_et">Phone</string>
     <string name="email_hint_dt">Email</string>
-    <string name="last_name_hint_et">Last Name</string>
-    <string name="first_name_hint_et">First Name</string>
+    <string name="first_name_hint_et">UserName</string>
 </resources>

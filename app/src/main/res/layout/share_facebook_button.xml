@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/share_facebook">
+    <Button
+        android:id="@+id/bt_share_facebook"
+        style="@android:style/Widget.Material.Light.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/roundbutton"
+        android:text="Share to Facebook"
+        android:textAllCaps="false"
+        android:textAppearance="@android:style/TextAppearance.Material.Button"
+        android:textStyle="italic"/>
+
+</android.support.constraint.ConstraintLayout>

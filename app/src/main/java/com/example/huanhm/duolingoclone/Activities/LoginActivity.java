@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.LoginRequest;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.ResponseAndMessage;
+import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.UserInfo;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoService;
 import com.example.huanhm.duolingoclone.R;
 import com.facebook.AccessToken;
@@ -25,6 +27,7 @@ import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -37,6 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.Semaphore;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +54,9 @@ public class LoginActivity extends Activity {
     LoginButton loginButton;
     public static AccessToken accessToken = AccessToken.getCurrentAccessToken();
     public static Profile profile = Profile.getCurrentProfile();
+
+    public static UserInfo userInfo;
+    public static UserInfo userInfoDefault;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,57 +74,36 @@ public class LoginActivity extends Activity {
                 .init(this);
 
         if (checkFacebookLoginStatus()){
-            toDashboardActivity();
+            LoginManager.getInstance().logOut();
         }
         //Initialize layout and set up events
         initFacebookLoginLayout();
         initFacebookLoginEvents();
     }
 
+    private void loginToServer() {
+        Call<UserInfo> call = PolyglottoService.getUserInfo(accessToken.getToken(),accessToken.getUserId());
+
+        call.enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(@NonNull Call<UserInfo> call, @NonNull Response<UserInfo> response) {
+                if(response.isSuccessful()){
+                    LoginActivity.userInfo = response.body();
+                    toDashboardActivity();
+                    Toast.makeText(getApplicationContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserInfo> call, @NonNull Throwable t) {
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         helper.finish();
         //super.onBackPressed();
-    }
-
-    /*public void login(View view) {
-        String username = ((EditText)findViewById(R.id.username_login)).getText().toString();
-        String password = ((EditText)findViewById(R.id.password_login)).getText().toString();
-        LoginRequest request = new LoginRequest();
-        request.username = username;
-        request.password = password;
-
-        Call<ResponseAndMessage> call = PolyglottoService.login(request);
-        call.enqueue(new Callback<ResponseAndMessage>() {
-            @Override
-            public void onResponse(Call<ResponseAndMessage> call, Response<ResponseAndMessage> response) {
-                try {
-                    ResponseAndMessage respObj = response.body();
-                    if (respObj.response.equals("success")) {
-                        Toast.makeText(getApplicationContext(), "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                        SwipeBackActivityHelper.startSwipeActivity(LoginActivity.this, intent, true, true, false);
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Sai mật khẩu hoặc tên đăng nhập", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Sai mật khẩu hoặc tên đăng nhập", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseAndMessage> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Đã xảy ra sự cố, vui lòng kiểm tra kết nối Internet", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
-
-    public void toForgetPassword(View view) {
-        Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
-        SwipeBackActivityHelper.startSwipeActivity(this, intent, true, true, false);
     }
 
     private void initFacebookLoginLayout(){
@@ -130,14 +116,34 @@ public class LoginActivity extends Activity {
         return accessToken != null && !accessToken.isExpired();
     }
     private void initFacebookLoginEvents(){
-            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            private ProfileTracker mProfileTracker;
+
             @Override
             public void onSuccess(LoginResult loginResult) {
                 accessToken = loginResult.getAccessToken();
-                Toast.makeText(getApplicationContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
-                toDashboardActivity();
+                if(Profile.getCurrentProfile() == null) {
+                    mProfileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            profile = Profile.getCurrentProfile();
+                            /*Toast.makeText(getApplicationContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
+                            toDashboardActivity();*/
+                            loginToServer();
+                            mProfileTracker.stopTracking();
+                        }
+                    };
+                    // no need to call startTracking() on mProfileTracker
+                    // because it is called by its constructor, internally.
+                }
+                else {
+                    profile = Profile.getCurrentProfile();
+                    loginToServer();
+                    /*Toast.makeText(getApplicationContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
+                    toDashboardActivity();*/
+                }
             }
-
             @Override
             public void onCancel() {
                 Toast.makeText(getApplicationContext(), "Login cancel", Toast.LENGTH_SHORT).show();
@@ -148,6 +154,8 @@ public class LoginActivity extends Activity {
                 Toast.makeText(getApplicationContext(), "Login error", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
     private void toDashboardActivity() {
@@ -160,4 +168,24 @@ public class LoginActivity extends Activity {
         callbackManager.onActivityResult(requestCode,resultCode,data);
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void toLoginDefault(View view) {
+        Call<UserInfo> call = PolyglottoService.getUserDefault();
+        call.enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(@NonNull Call<UserInfo> call, @NonNull Response<UserInfo> response) {
+                if(response.isSuccessful()){
+                    LoginActivity.userInfoDefault = response.body();
+                    Toast.makeText(getApplicationContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
+                    toDashboardActivity();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserInfo> call, @NonNull Throwable t) {
+                Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

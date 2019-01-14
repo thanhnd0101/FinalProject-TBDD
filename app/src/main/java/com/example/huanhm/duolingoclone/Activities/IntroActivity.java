@@ -37,11 +37,11 @@ public class IntroActivity extends Activity {
         SwipeBackActivityHelper.startSwipeActivity(this, intent, true, true, false);
     }
 
-    public void toRegisterActivity(View view) {
+    /*public void toRegisterActivity(View view) {
         Intent intent = new Intent(IntroActivity.this, RegisterActivity.class);
 
         SwipeBackActivityHelper.startSwipeActivity(this, intent, true, true, false);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
