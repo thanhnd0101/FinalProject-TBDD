@@ -1,14 +1,11 @@
 package com.example.huanhm.duolingoclone.Activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.drm.DrmStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,25 +14,19 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerTextView;
-import com.example.huanhm.duolingoclone.DataModel.Lesson;
-import com.example.huanhm.duolingoclone.DataModel.Question;
-import com.example.huanhm.duolingoclone.DataModel.Topic;
 import com.example.huanhm.duolingoclone.OpenTriviaService.OpenTriviaModel.QuestionModel;
 import com.example.huanhm.duolingoclone.OpenTriviaService.OpenTriviaResponse.QuestionResponse;
 import com.example.huanhm.duolingoclone.OpenTriviaService.OpenTriviaService;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.QuestionList;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoService;
 import com.example.huanhm.duolingoclone.R;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.github.bluzwong.swipeback.SwipeBackActivityHelper;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
-import java.lang.reflect.Array;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;

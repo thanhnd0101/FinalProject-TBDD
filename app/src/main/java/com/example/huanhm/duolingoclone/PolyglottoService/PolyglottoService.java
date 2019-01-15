@@ -1,16 +1,7 @@
 package com.example.huanhm.duolingoclone.PolyglottoService;
 
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.EditRequest;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.LoginRequest;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.RegisterRequest;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.LessonList;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.QuestionList;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.ResponseAndMessage;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.Status;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.TopicList;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.UserInfo;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;

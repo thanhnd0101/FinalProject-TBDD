@@ -1,18 +1,14 @@
 package com.example.huanhm.duolingoclone.Activities;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -21,8 +17,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.EditRequest;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.LoginRequest;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.ResponseAndMessage;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.UserInfo;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoService;
 import com.example.huanhm.duolingoclone.R;
@@ -30,11 +24,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -45,16 +36,12 @@ import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
-import java.util.concurrent.Semaphore;
 
 import retrofit2.Call;
 import retrofit2.Callback;

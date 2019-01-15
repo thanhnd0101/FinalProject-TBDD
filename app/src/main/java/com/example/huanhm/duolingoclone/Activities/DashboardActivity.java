@@ -1,17 +1,8 @@
 package com.example.huanhm.duolingoclone.Activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,39 +10,19 @@ import android.transition.Slide;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.example.huanhm.duolingoclone.CustomViews.ConnectLineView;
-import com.example.huanhm.duolingoclone.CustomViews.LessonNode;
-import com.example.huanhm.duolingoclone.CustomViews.TopicNode;
 import com.example.huanhm.duolingoclone.DashboardAdapter.PagerAdapter;
 import com.example.huanhm.duolingoclone.DashboardFagments.AccountFragment;
 import com.example.huanhm.duolingoclone.DashboardFagments.AchievementFagment;
 import com.example.huanhm.duolingoclone.DashboardFagments.LearningFragment;
 import com.example.huanhm.duolingoclone.DashboardFagments.SearchingFragment;
-import com.example.huanhm.duolingoclone.DataModel.Lesson;
-import com.example.huanhm.duolingoclone.DataModel.Topic;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.LessonList;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.TopicList;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoService;
 import com.example.huanhm.duolingoclone.R;
 import com.facebook.login.LoginManager;
 import com.github.bluzwong.swipeback.SwipeBackActivityHelper;
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
-
-import at.wirecube.additiveanimations.additive_animator.AdditiveAnimator;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DashboardActivity extends AppCompatActivity {
 
