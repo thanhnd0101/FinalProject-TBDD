@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DuolingoClone</string>
+    <string name="app_name">Polyglotto</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
