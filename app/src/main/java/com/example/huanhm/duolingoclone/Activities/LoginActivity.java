@@ -15,6 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.EditRequest;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.LoginRequest;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.ResponseAndMessage;
@@ -34,8 +39,15 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.github.bluzwong.swipeback.SwipeBackActivityHelper;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -47,6 +59,8 @@ import java.util.concurrent.Semaphore;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.ContentValues.TAG;
 
 public class LoginActivity extends Activity {
 
@@ -204,7 +218,7 @@ public class LoginActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void toLoginDefault(View view) {
+    public void toLoginDefault() {
         Call<UserInfo> call = PolyglottoService.getUserDefault();
         call.enqueue(new Callback<UserInfo>() {
             @Override
@@ -223,4 +237,56 @@ public class LoginActivity extends Activity {
         });
     }
 
+    public void doCaptcha(View view) {
+        SafetyNet.getClient(this).verifyWithRecaptcha("6LcKkoIUAAAAANjWWMJri50ehKyT9As_vekdv0wK")
+                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                    @Override
+                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                        if (!response.getTokenResult().isEmpty()) {
+                            handleSiteVerify(response.getTokenResult());
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if (e instanceof ApiException) {
+                            ApiException apiException = (ApiException) e;
+                            Log.d(TAG, "Error message: " +
+                                    CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
+                        } else {
+                            Log.d(TAG, "Unknown type of error: " + e.getMessage());
+                        }
+                    }
+                });
+    }
+
+    private void handleSiteVerify(String tokenResult) {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "https://www.google.com/recaptcha/api/siteverify?secret=6LcKkoIUAAAAAGr7V7qaXuaymoghBnqXJWcflTbt&response=" + tokenResult;
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject json = new JSONObject(response);
+                            if (json.getBoolean("success")) {
+                                toLoginDefault();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
 }
