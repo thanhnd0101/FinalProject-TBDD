@@ -54,7 +54,9 @@ public class AccountFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dashboard_fragment_profile,container,false);
-        getUserInfo(accessToken);
+        if(LoginActivity.userInfo != null) {
+            getUserInfo(accessToken);
+        }
         initLayout(view);
         setEditFunction();
         return view;
@@ -116,8 +118,11 @@ public class AccountFragment extends Fragment {
 
         if(LoginActivity.userInfoDefault != null) {
             tvProfileUserName.setText(LoginActivity.userInfoDefault.getUsername());
+            if(LoginActivity.userInfoDefault.getPhonenumber()!= null){
+                tvProfilePhone.setText(LoginActivity.userInfoDefault.getPhonenumber());
+            }
         }else {
-            tvProfilePhone.setText(userInfo.getPhonenuber());
+            tvProfilePhone.setText(userInfo.getPhonenumber());
             tvProfileUserName.setText(profile.getName());
             profileIview.setProfileId(profile.getId());
         }

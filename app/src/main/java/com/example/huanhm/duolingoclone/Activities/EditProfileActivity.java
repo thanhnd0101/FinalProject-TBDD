@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.EditRequest;
-import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.Status;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoService;
 import com.example.huanhm.duolingoclone.R;
 import com.facebook.login.widget.ProfilePictureView;
@@ -64,16 +63,17 @@ public class EditProfileActivity extends AppCompatActivity {
                             if(response.isSuccessful()){
                                 status = response.body();
                                 if(Objects.requireNonNull(status).equals("success")){
-                                    Toast.makeText(getApplicationContext(), "Modify successfuly", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Edit successfuly", Toast.LENGTH_SHORT).show();
+                                    Objects.requireNonNull(DashboardActivity.viewPager.getAdapter()).notifyDataSetChanged();
                                 }else{
-                                    Toast.makeText(getApplicationContext(), "Modify failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Edit failed", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                            Toast.makeText(getApplicationContext(), "Modify failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Edit failed", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

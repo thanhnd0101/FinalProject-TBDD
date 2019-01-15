@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.EditRequest;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoRequest.LoginRequest;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.ResponseAndMessage;
 import com.example.huanhm.duolingoclone.PolyglottoService.PolyglottoResponse.UserInfo;
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
 import retrofit2.Call;
@@ -89,13 +91,46 @@ public class LoginActivity extends Activity {
             public void onResponse(@NonNull Call<UserInfo> call, @NonNull Response<UserInfo> response) {
                 if(response.isSuccessful()){
                     LoginActivity.userInfo = response.body();
-                    toDashboardActivity();
-                    Toast.makeText(getApplicationContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
+                    if(LoginActivity.userInfo.isNew_account()){
+                        upLoadUserInfo();
+                    }else {
+                        toDashboardActivity();
+                        Toast.makeText(getApplicationContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<UserInfo> call, @NonNull Throwable t) {
+                Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    String status;
+    private void upLoadUserInfo() {
+        EditRequest editRequest = new EditRequest(profile.getName(),
+                "", "");
+        Call<String> call = PolyglottoService.postModifiedUserInfo(LoginActivity.accessToken.getToken()
+                ,profile.getId(),editRequest);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                if(response.isSuccessful()){
+                    status = response.body();
+                    if(Objects.requireNonNull(status).equals("success")){
+                        Toast.makeText(getApplicationContext(), "Upload info successfuly", Toast.LENGTH_SHORT).show();
+                        Objects.requireNonNull(DashboardActivity.viewPager.getAdapter()).notifyDataSetChanged();
+                        toDashboardActivity();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Upload info failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Toast.makeText(getApplicationContext(), "Upload info failed", Toast.LENGTH_SHORT).show();
             }
         });
     }

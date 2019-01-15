@@ -8,19 +8,21 @@ import java.util.List;
 public class UserInfo implements Serializable {
     @SerializedName("username")
     private String username;
-    @SerializedName("phonenuber")
-    private String phonenuber;
+    @SerializedName("phonenumber")
+    private String phonenumber;
     @SerializedName("email")
     private String email;
     @SerializedName("achievements")
     private List<Integer> achievements;
+    @SerializedName("new_account")
+    private boolean new_account;
 
     public String getUsername() {
         return username;
     }
 
-    public String getPhonenuber() {
-        return phonenuber;
+    public String getPhonenumber() {
+        return phonenumber;
     }
 
     public String getEmail() {
@@ -29,5 +31,9 @@ public class UserInfo implements Serializable {
 
     public List<Integer> getAchievements() {
         return achievements;
+    }
+
+    public boolean isNew_account() {
+        return new_account;
     }
 }

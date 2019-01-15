@@ -53,8 +53,8 @@ public class AchievementFagment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dashboard_fragment_achievement,container,false);
         iniView(view);
-        setOnClickShareAchievement();
         getUserAchievement();
+        setOnClickShareAchievement();
         return view;
     }
 
@@ -135,8 +135,10 @@ public class AchievementFagment extends Fragment {
     }
 
     private void shareToFaceBook(final Bitmap bitmap){
-        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(mContext,SweetAlertDialog.NORMAL_TYPE);
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(mContext,SweetAlertDialog.CUSTOM_IMAGE_TYPE);
+        sweetAlertDialog.setCustomImage(R.drawable.icon_fb);
         sweetAlertDialog.setTitleText("Share to FaceBook");
+        sweetAlertDialog.setConfirmText("share");
         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {

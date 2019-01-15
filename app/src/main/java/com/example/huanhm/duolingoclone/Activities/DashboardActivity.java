@@ -63,7 +63,8 @@ public class DashboardActivity extends AppCompatActivity {
     SwipeBackActivityHelper helper = new SwipeBackActivityHelper();
 
     PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-    ViewPager viewPager;
+    @SuppressLint("StaticFieldLeak")
+    public static ViewPager viewPager;
     TabLayout tabLayout;
 
     @Override
@@ -143,4 +144,5 @@ public class DashboardActivity extends AppCompatActivity {
         else
             ((LearningFragment)pagerAdapter.getFragment(0)).goTobackToTopicList();
     }
+
 }
